@@ -1,0 +1,24 @@
+node {
+def mvnHome
+def tomcatUser = 'ec2-user'
+def tomcatHost = '52.66.8.70'
+def tomcatPath = '/home/ec2-user/tomcat/webapps/'
+stage('Checkout') {
+// Checkout source code from Git
+git branch: 'master',  url: 'https://github.com/shashi26g/HelloWorld.git'
+}
+stage('Build') {
+// Set Maven tool
+mvnHome = tool 'maven'
+// Run Maven build
+sh "'${mvnHome}/bin/mvn' clean package"
+// Archive the build artifacts
+archiveArtifacts artifacts: '**/target/*.war'
+}
+stage('Deploy') {
+// Deploy the artifact using rsync and ssh
+sshagent(['tomcat']) {
+sh "rsync -avz -e 'ssh -o StrictHostKeyChecking=no' --delete target/*.war ${tomcatUser}@${tomcatHost}:${tomcatPath}"
+}
+}
+}

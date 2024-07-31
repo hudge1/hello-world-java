@@ -5,7 +5,7 @@ def tomcatHost = '52.66.8.70'
 def tomcatPath = '/home/ec2-user/tomcat/webapps/'
 stage('Checkout') {
 // Checkout source code from Git
-git branch: 'master',  url: 'https://github.com/shashi26g/HelloWorld.git'
+git branch: 'master',  url: 'https://github.com/hudge1/hello-world-java.git'
 }
 stage('Build') {
 // Set Maven tool
